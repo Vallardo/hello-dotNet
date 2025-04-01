@@ -11,14 +11,14 @@ pipeline {
         stage('Build the dotNet app') {
             steps {
                 echo 'Building...'
-                //bat dotnet build //Commands for the build process
+                bat dotnet build //Commands for the build process
             }
         }
 
         stage('Build Docker image') {
             steps {
                 echo 'Building Docker image...'
-                //bat docker build -t basicdotnetapi .
+                bat docker build -t basicdotnetapi .
             }
         }
 
