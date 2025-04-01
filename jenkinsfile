@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                script {
+                    // Cloning the repository using jenkins built in scm variable (depends on jenkins pipeline config)
+                    echo 'Checking the code out...'
+                    checkout scm 
+                    //this is how you would checkout manually
+                    //git url: 'https://github.com/Vallardo/hello-dotNet.git', branch: 'main'
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Building...'
+                bat dotnet build //Commands for the build process
+            }
+        }
+
+        stage('Build Docker image') {
+            steps {
+                echo 'Building Docker image...'
+                bat docker build -t basicdotnetapi . //"basicdotnetapi" is the name of the app
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying...'
+                // Commands to deploy your project
+            }
+        }
+    }
+}
