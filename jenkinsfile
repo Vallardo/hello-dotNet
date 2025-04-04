@@ -27,7 +27,7 @@ pipeline {
                 echo 'Authenticating with AWS ECR...'
                 //apparently there is another way to get credentials from the jenkings agent (I dont know how to yet)
                 //This next line reads SECRET and ACCESS Keys from my local .aws/credentials
-                bat 'aws ecr get-login-password --region us-west-2 | sudo docker login --username AWS --password-stdin 177555066587.dkr.ecr.us-west-2.amazonaws.com'
+                bat 'aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 177555066587.dkr.ecr.us-west-2.amazonaws.com'
             }
         }
 
