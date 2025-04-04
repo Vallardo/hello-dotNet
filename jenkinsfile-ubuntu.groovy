@@ -15,7 +15,7 @@ pipeline {
             }
         }
 
-        stage('Build Docker image') {
+        stage('Build a Docker image') {
             steps {
                 echo 'Building Docker image...'
                 bat 'docker build -t basicdotnetapi .' //"basicdotnetapi" is the name of my app
@@ -38,51 +38,13 @@ pipeline {
                 bat 'docker tag basicdotnetapi:latest 177555066587.dkr.ecr.us-west-2.amazonaws.com/vallardo-dotnetapp:latest'
             }
         }
+
         stage('Push the image to Amazon Elastic Container Registry (ECR)') {
             steps {
                 echo 'Pushing the image to Amazon Elastic Container Registry (ECR)...'
                 bat 'docker push 177555066587.dkr.ecr.us-west-2.amazonaws.com/vallardo-dotnetapp:latest'
             }
         }
-
-        /*stage('Launch EC2 Instance') {
-            steps {
-                script {
-                    // Define the AMI ID, Instance Type, Security Group ID, Subnet ID, and Key Pair
-                    //def amiId = 'ami-075686beab831bb7f'  //ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-20250305
-                    def amiId = 'ami-087f352c165340ea1'    //Amazon Linux 2023 AMI 2023.7.20250331.0 x86_64 HVM kernel-6.1 
-                    def instanceType = 't2.micro'        // Replace with your desired instance type
-                    session manager is the recommended way to authenticate, so no keyName is required, a flag saying no-key is require
-                    //def keyName = 'vallardo_ec2'            // Replace with your EC2 Key Pair  //not used in real project
-                    def securityGroupId = 'sg-0abcd1234efgh5678'  // Replace with your Security Group ID
-                    def subnetId = 'subnet-12345abcde67890fg'     // Replace with your Subnet ID
-                    def tagName = 'MyEC2Instance'         // Name tag for the instance
-
-                    // Launch EC2 Instance using AWS CLI command
-                    bat """
-                        aws ec2 run-instances \
-                            --image-id ${amiId} \
-                            --count 1 \
-                            --instance-type ${instanceType} \
-                            --key-name ${keyName} \optional
-                            --security-group-ids ${securityGroupId} \
-                            --subnet-id ${subnetId} \
-                            --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=${tagName}}]' \
-                            --output json
-                    """
-                }
-            }
-        }
-        
-        stage('Describe EC2 Instance') {
-            steps {
-                script {
-                    // Get the instance ID of the launched instance
-                    //def instanceId = sh(script: "aws ec2 describe-instances --query 'Reservations[0].Instances[0].InstanceId' --output text", returnStdout: true).trim()
-                    echo "Launched EC2 instance with ID: ${instanceId}"
-                }
-            }
-        }*/
         
         stage('Connect to EC2 via SSH'){
             steps{
@@ -93,14 +55,28 @@ pipeline {
             }
         }
 
+        stage('Install AWS CLI on EC2 instance'){ //this stage is needed for ubuntu EC2 instancebut but not for Amazon Linux EC2 instances
+            steps{
+                echo 'Installing AWS CLI on the EC2 instance ...'
+                bat 'sudo apt-get update -y'
+                bat 'sudo apt-get install unzip curl -y'
+                bat 'curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"'
+                bat 'unzip awscliv2.zip'
+                bat 'sudo ./aws/install'
+                bat 'aws --version'
+            }
+        }
+
         stage('Install Docker on the EC2 instance'){
             steps{
                 echo 'Installing Docker in EC2...'
-                bat 'sudo yum update -y'
-                bat 'sudo yum install -y docker'
-                bat 'sudo service docker start'
-                bat 'sudo usermod -aG docker ec2-user'
-                bat 'docker --version'
+                bat 'sudo apt-get update'
+                bat 'sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common'
+                bat 'curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -'
+                bat 'sudo DEBIAN_FRONTEND=noninteractive add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"'
+                bat 'sudo apt-get update'
+                bat 'sudo apt-get install -y docker-ce'
+                bat 'sudo docker --version'
             }
         }
 

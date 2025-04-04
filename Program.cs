@@ -20,7 +20,7 @@ if (app.Environment.IsDevelopment())
 // Define a simple API endpoint
 app.MapGet("/api/helloworld", () =>
 {
-    return Results.Ok(new { message = "Hello, dotNet World!" });
+    return Results.Ok(new { message = "Hello, VJ dotNet World!" });
 });
 
 app.Run();
