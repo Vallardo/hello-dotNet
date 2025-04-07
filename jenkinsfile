@@ -32,8 +32,7 @@ pipeline {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'vj-aws-dev-creds']]) { 
                     script {
                         // AWS Access Key and Secret are available as environment variables
-                        echo "AWS Access Key: $AWS_ACCESS_KEY_ID"
-                        echo "AWS Secret Key: $AWS_SECRET_ACCESS_KEY"
+                        bat 'aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 177555066587.dkr.ecr.us-west-2.amazonaws.com'
                         // Run AWS CLI or any other commands using the AWS credentials
                         
                         
