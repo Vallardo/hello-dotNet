@@ -94,17 +94,15 @@ pipeline {
         
         stage('Connect to EC2 via SSH'){
             steps{
-                echo 'Connecting to EC2 via ssh...'
-                //where do ec2.pem is stored typically? in this case in in my local box in a random location
-                //DO I NEED THE .PEM FILE AT ALL? HOW CAN I USE THE ROLE?
-                //Figure out amazon secret manager and stoe the pem there and retrieve it here.
-                // Use the AWS CLI on Windows to retrieve the secret
-                step{
-                    def secretValue = '''aws secretsmanager get-secret-value --secret-id vallardo-ec2-pem --query SecretString --output text'''
+                script{
+                    echo 'Connecting to EC2 via ssh...'
+                    def secretValue = bat(script: '''aws secretsmanager get-secret-value --secret-id vallardo-ec2-pem --query SecretString --output text''', returnStdout: true).trim()
+                    bat(script: 'echo Hello, World!')
                     echo "Retrieved secret: ${secretValue}"
-                    //bat 'ssh -i ${secretValue} ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com'
-                    //bat 'ssh -i "../../vallardo_ec2.pem" ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com'
+                        //bat 'ssh -i ${secretValue} ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com'
+                        //bat 'ssh -i "../../vallardo_ec2.pem" ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com'
                 }
+                
             }
         }
 
