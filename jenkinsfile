@@ -98,9 +98,12 @@ pipeline {
                     script{
                         echo 'Connecting to EC2 via ssh...'
                         def secretValue = bat(script: '''aws secretsmanager get-secret-value --secret-id vallardo-ec2-pem --query SecretString --output text''', returnStdout: true).trim()
-                        bat(script: 'echo Hello, World!')
-                        echo "Retrieved secret: ${secretValue}"
-                        bat '''ssh -i ${secretValue} ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com'''
+                        // Write the PEM content to a file in the workspace
+                        writeFile file: 'my-ec2.pem', text: pemContent
+
+                        // Set the correct permissions for the PEM file
+                        bat 'chmod 400 my-ec2.pem'
+                        bat '''ssh -i my-ec2.pem ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com'''
                         //bat 'ssh -i "../../vallardo_ec2.pem" ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com'
                     }
                 }
