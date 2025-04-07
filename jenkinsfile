@@ -107,7 +107,7 @@ pipeline {
                         writeFile file: 'my-ec2.pem', text: secretValue
 
                         // Set the correct permissions for the PEM file
-                        echo '''Vallardo ready to connect to EC2 secret: ${secretValue}'''
+                        echo "Retrieved secret: ${secretValue}"
                         bat 'ssh -i my-ec2.pem -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com "uptime"'
                         //bat 'ssh -i "../../vallardo_ec2.pem" ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com'
                     }
