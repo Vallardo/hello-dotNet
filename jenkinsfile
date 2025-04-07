@@ -1,5 +1,9 @@
 pipeline {
     agent any
+    
+    environment {
+        AWS_DEFAULT_REGION = 'us-west-2'  // Set your AWS region here
+    }
 
     stages {
         stage('Clone Repository') {
@@ -23,29 +27,25 @@ pipeline {
         }
 
         stage('Authenticate with AWS ECR'){
-            environment {
-                // Referencing AWS credentials stored in Jenkins
-                //AWS_ACCESS_KEY_ID = credentials('aws-access-key-id')  // The ID of the stored credentials
-                //AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')  // The ID of the stored credentials
-                AWS_DEFAULT_REGION = 'us-west-2'  // Set your AWS region here
-            }
-            /*steps{
+            steps{
                 echo 'Authenticating with AWS ECR...'
-                //apparently there is another way to get credentials from the jenkings agent (I dont know how to yet)
-                //This next line reads SECRET and ACCESS Keys from my local .aws/credentials
-                bat 'set'
-                bat 'aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 177555066587.dkr.ecr.us-west-2.amazonaws.com'
-            }*/
-            withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'vj-aws-dev-creds']]) {
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'vj-aws-dev-creds']]) { 
                     script {
                         // AWS Access Key and Secret are available as environment variables
-                        
                         echo "AWS Access Key: $AWS_ACCESS_KEY_ID"
                         echo "AWS Secret Key: $AWS_SECRET_ACCESS_KEY"
                         // Run AWS CLI or any other commands using the AWS credentials
                         
                         
                     }
+                }
+            }
+                //apparently there is another way to get credentials from the jenkings agent (I dont know how to yet)
+                //This next line reads SECRET and ACCESS Keys from my local .aws/credentials
+            //    bat 'set'
+            //    bat 'aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 177555066587.dkr.ecr.us-west-2.amazonaws.com'
+            //}
+
         }
 
         stage('Tag the image') {
