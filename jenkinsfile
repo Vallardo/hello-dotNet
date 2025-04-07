@@ -108,6 +108,7 @@ pipeline {
 
                         // Set the correct permissions for the PEM file
                         echo "Retrieved secret: ${secretValue}"
+                        bat 'chmod 400 my-ec2.pem'
                         bat 'ssh -i "my-ec2.pem" -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com "uptime"'
                         //bat 'ssh -i "../../vallardo_ec2.pem" ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com'
                     }
