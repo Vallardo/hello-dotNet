@@ -31,20 +31,10 @@ pipeline {
                 echo 'Authenticating with AWS ECR...'
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'vj-aws-dev-creds']]) { 
                     script {
-                        // AWS Access Key and Secret are available as environment variables
                         bat 'aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 177555066587.dkr.ecr.us-west-2.amazonaws.com'
-                        // Run AWS CLI or any other commands using the AWS credentials
-                        
-                        
                     }
                 }
             }
-                //apparently there is another way to get credentials from the jenkings agent (I dont know how to yet)
-                //This next line reads SECRET and ACCESS Keys from my local .aws/credentials
-            //    bat 'set'
-            //    bat 'aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 177555066587.dkr.ecr.us-west-2.amazonaws.com'
-            //}
-
         }
 
         stage('Tag the image') {
