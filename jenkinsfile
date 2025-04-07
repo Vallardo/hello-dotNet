@@ -32,7 +32,7 @@ pipeline {
                     script {
                         bat 'aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 177555066587.dkr.ecr.us-west-2.amazonaws.com'
                     }
-            }
+                }
                 
             }
             
@@ -94,14 +94,17 @@ pipeline {
         
         stage('Connect to EC2 via SSH'){
             steps{
-                script{
-                    echo 'Connecting to EC2 via ssh...'
-                    def secretValue = bat(script: '''aws secretsmanager get-secret-value --secret-id vallardo-ec2-pem --query SecretString --output text''', returnStdout: true).trim()
-                    bat(script: 'echo Hello, World!')
-                    echo "Retrieved secret: ${secretValue}"
-                        //bat 'ssh -i ${secretValue} ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com'
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'vj-aws-dev-creds']]) {
+                    script{
+                        echo 'Connecting to EC2 via ssh...'
+                        def secretValue = bat(script: '''aws secretsmanager get-secret-value --secret-id vallardo-ec2-pem --query SecretString --output text''', returnStdout: true).trim()
+                        bat(script: 'echo Hello, World!')
+                        echo "Retrieved secret: ${secretValue}"
+                        bat '''ssh -i ${secretValue} ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com'''
                         //bat 'ssh -i "../../vallardo_ec2.pem" ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com'
+                    }
                 }
+                
                 
             }
         }
