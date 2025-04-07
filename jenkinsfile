@@ -12,17 +12,19 @@ pipeline {
             }
         }
 
+        //what should the jenkins environment include before running the pipeline for dotnet if run outside of my machine?
         stage('Build the dotNet app') {
             steps {
                 echo 'Building...'
-                bat 'dotnet build' //Commands for the build process
+                bat 'dotnet build'
             }
         }
 
         stage('Build Docker image') {
             steps {
                 echo 'Building Docker image...'
-                bat 'docker build -t basicdotnetapi .' //"basicdotnetapi" is the name of my app
+                //This step is assuming a docker service is running, do we need to install docker in jenkins too?
+                bat 'docker build -t basicdotnetapi .'
             }
         }
 
@@ -40,7 +42,6 @@ pipeline {
         stage('Tag the image') {
             steps {
                 echo 'Tagging the image...'
-                //Tha tag given to this image is "latest" but it could be anything like 1.0 etc..
                 bat 'docker tag basicdotnetapi:latest 177555066587.dkr.ecr.us-west-2.amazonaws.com/vallardo-dotnetapp:latest'
             }
         }
