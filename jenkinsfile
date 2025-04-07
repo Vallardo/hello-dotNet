@@ -100,7 +100,8 @@ pipeline {
                 //Figure out amazon secret manager and stoe the pem there and retrieve it here.
                 // Use the AWS CLI on Windows to retrieve the secret
                 def secretValue = bat(script: '''aws secretsmanager get-secret-value --secret-id vallardo-ec2-pem --query SecretString --output text''', returnStdout: true).trim()
-                bat 'ssh -i ${secretValue} ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com'
+                echo "Retrieved secret: ${secretValue}"
+                //bat 'ssh -i ${secretValue} ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com'
                 //bat 'ssh -i "../../vallardo_ec2.pem" ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com'
             }
         }
