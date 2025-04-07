@@ -5,6 +5,10 @@ pipeline {
         AWS_DEFAULT_REGION = 'us-west-2'  // Set your AWS region here
     }
 
+    options {
+        timeout(time: 3, unit: 'MINUTES') 
+    }
+    
     stages {
         stage('Clone Repository') {
             steps {
