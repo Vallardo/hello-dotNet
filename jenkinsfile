@@ -102,21 +102,35 @@ pipeline {
         stage('Connect to EC2 via SSH'){
             steps{
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'vj-aws-dev-creds']]) {
-                    script{
+                    //script{
                         echo 'Connecting to EC2 via ssh...'
-                        def secretValue = bat(script: '''aws secretsmanager get-secret-value --secret-id vallardo-plain-ec2-pem --query SecretString --output text''', returnStdout: true).trim()
+                        //def secretValue = bat(script: '''aws secretsmanager get-secret-value --secret-id vallardo-plain-ec2-pem --query SecretString --output text''', returnStdout: true).trim()
                         // Write the PEM content to a file in the workspace
                         //Note: Jenkins does not allow writting files with .pem extension 
-                        def pemFilePath = "${env.WORKSPACE}\\vallardo-plain-ec2-pem"
+                        //def pemFilePath = "${env.WORKSPACE}\\vallardo-plain-ec2-pem"
 
-                        writeFile file: pemFilePath, text: secretValue
+                        //writeFile file: pemFilePath, text: secretValue
 
                         // Debug: Confirm the file is created
-                        echo "PEM file written to: ${pemFilePath}"
+                        //echo "PEM file written to: ${pemFilePath}"
                         //bat "powershell Set-ItemProperty -Path \"${pemFilePath}\" -Name \"IsReadOnly\" -Value $true"
                         //bat 'ssh -i "vallardo-pem" -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com "uptime"'
-                        bat "ssh -vv -i \"${pemFilePath}\" -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com \"uptime\""
-                    }
+                        //bat "ssh -vv -i \"${pemFilePath}\" -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com \"uptime\""
+
+                        sshagent(credentials: ['ssh-credentials-id']) {
+                            script {
+                                bat '''
+                                    REM Create the .ssh directory if it does not exist
+                                    if not exist %USERPROFILE%\\.ssh mkdir %USERPROFILE%\\.ssh
+                                    
+                                    REM Add the server's SSH keys to the known_hosts file
+                                    ssh-keyscan -t rsa,dsa ec2-44-245-155-98.us-west-2.compute.amazonaws.com >> %USERPROFILE%\\.ssh\\known_hosts
+                                    
+                                    REM Run the SSH command to the EC2 instance
+                                    ssh -o StrictHostKeyChecking=no ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com "hostname"
+                                '''
+                            }
+                        }
                 }
                 
                 
