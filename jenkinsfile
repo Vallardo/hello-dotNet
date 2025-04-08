@@ -119,7 +119,7 @@ pipeline {
 
                         sshagent(credentials: ['vj_aws_ec2_ssh']) {
                             script {
-                                echo "ABout to call SSH"
+                                echo 'ABout to call SSH'
                                 bat '''
                                     REM Create the .ssh directory if it does not exist
                                     if not exist %USERPROFILE%\\.ssh mkdir %USERPROFILE%\\.ssh
