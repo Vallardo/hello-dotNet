@@ -105,21 +105,29 @@ pipeline {
                         def secretValue = bat(script: '''aws secretsmanager get-secret-value --secret-id vallardo-plain-ec2-pem --query SecretString --output text''', returnStdout: true).trim()
                         // Write the PEM content to a file in the workspace
                         //Note: Jenkins does not allow writting files with .pem extension 
-                        def pemFilePath = "${env.WORKSPACE}\\vallardo-pem"
-                        writeFile file: pemFilePath, text: secretValue
-                        echo "PEM file written to: ${pemFilePath}"
+                        //def pemFilePath = "${env.WORKSPACE}\\vallardo-pem"
+
+                        writeFile file: "vallardo-pem", text: secretValue
+
+                        // Debug: Confirm the file is created
+                        //echo "PEM file written to: ${pemFilePath}"
+                        //bat 'powershell Set-ItemProperty -Path "my-ec2.pem" -Name "IsReadOnly" -Value $true'
+                        bat 'ssh -i "vallardo-pem" -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com "uptime"'
+                        //bat 'ssh -i "../../vallardo_ec2.pem" ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com'
                     }
                 }
+                
+                
             }
         }
 
         stage('Install Docker on the EC2 instance'){
             steps{
                 echo 'Installing Docker in EC2...'
-                bat 'yum update -y'
-                bat 'yum install -y docker'
-                bat 'service docker start'
-                bat 'usermod -aG docker ec2-user'
+                bat 'sudo yum update -y'
+                bat 'sudo yum install -y docker'
+                bat 'sudo service docker start'
+                bat 'sudo usermod -aG docker ec2-user'
                 bat 'docker --version'
             }
         }
