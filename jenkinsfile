@@ -117,7 +117,7 @@ pipeline {
                         //bat 'ssh -i "vallardo-pem" -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com "uptime"'
                         //bat "ssh -vv -i \"${pemFilePath}\" -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com \"uptime\""
 
-                        sshagent(credentials: ['ssh-credentials-id']) {
+                        sshagent(credentials: ['vj_aws_ec2_ssh']) {
                             script {
                                 bat '''
                                     REM Create the .ssh directory if it does not exist
