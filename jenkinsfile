@@ -101,9 +101,9 @@ pipeline {
         
         stage('Connect to EC2 via SSH'){
             steps{
-                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'vj-aws-dev-creds']]) {
+                //withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'vj-aws-dev-creds']]) {
                     //script{
-                        echo 'Connecting to EC2 via ssh...'
+                        //echo 'Connecting to EC2 via ssh...'
                         //def secretValue = bat(script: '''aws secretsmanager get-secret-value --secret-id vallardo-plain-ec2-pem --query SecretString --output text''', returnStdout: true).trim()
                         // Write the PEM content to a file in the workspace
                         //Note: Jenkins does not allow writting files with .pem extension 
@@ -132,7 +132,7 @@ pipeline {
                                 '''
                             }
                         }
-                }
+                //}
                 
                 
             }
