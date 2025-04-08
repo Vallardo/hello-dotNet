@@ -107,7 +107,7 @@ pipeline {
                         //writeFile file: 'my-ec2.pem', text: secretValue
                         def pemFilePath = "${env.WORKSPACE}\\my-ec2.pem"
 
-                        writeFile file: pemFilePath, text: pemContent
+                        writeFile file: pemFilePath, text: secretValue
 
                         // Debug: Confirm the file is created
                         echo "PEM file written to: ${pemFilePath}"
