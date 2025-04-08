@@ -105,7 +105,7 @@ pipeline {
                         def secretValue = bat(script: '''aws secretsmanager get-secret-value --secret-id vallardo-plain-ec2-pem --query SecretString --output text''', returnStdout: true).trim()
                         // Write the PEM content to a file in the workspace
                         //Note: Jenkins does not allow writting files with .pem extension 
-                        def pemFilePath = "${env.WORKSPACE}\\vallardo-pem"
+                        def pemFilePath = "${env.WORKSPACE}\\vallardo-plain-ec2-pem"
 
                         writeFile file: pemFilePath, text: secretValue
 
