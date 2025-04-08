@@ -113,7 +113,7 @@ pipeline {
                         echo "PEM file written to: ${pemFilePath}"
                         //bat "powershell Set-ItemProperty -Path \"${pemFilePath}\" -Name \"IsReadOnly\" -Value $true"
                         //bat 'ssh -i "vallardo-pem" -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com "uptime"'
-                        bat "ssh -i \"${pemFilePath}\" ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com"
+                        bat "ssh -i \"${pemFilePath}\" -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com" \"uptime"
                     }
                 }
                 
