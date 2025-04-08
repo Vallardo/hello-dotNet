@@ -105,7 +105,7 @@ pipeline {
                         def secretValue = bat(script: '''aws secretsmanager get-secret-value --secret-id vallardo-plain-ec2-pem --query SecretString --output text''', returnStdout: true).trim()
                         // Write the PEM content to a file in the workspace
                         //writeFile file: 'my-ec2.pem', text: secretValue
-                        def pemFilePath = "${env.WORKSPACE}\\vallardo-plain-ec2-pem"
+                        def pemFilePath = "${env.WORKSPACE}\\vallardo-random"
 
                         writeFile file: pemFilePath, text: secretValue
 
