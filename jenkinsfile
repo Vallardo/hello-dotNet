@@ -103,7 +103,7 @@ pipeline {
             steps{
                 withCredentials([sshUserPrivateKey(credentialsId: 'vj_aws_ec2_ssh', keyFileVariable: 'PK')]) {
                     echo 'Inside sshUserPrivateKey credentials'
-                    echo '$PK'
+                    echo "${PK}"
                     //bat '''
                     //                REM Create the .ssh directory if it does not exist
                     //                if not exist %USERPROFILE%\\.ssh mkdir %USERPROFILE%\\.ssh
@@ -113,7 +113,7 @@ pipeline {
                     //            '''
                     //sh 'git -c core.sshCommand="ssh -i $PK" submodule update --init'
                     //bat "ssh -vv -i \"${pemFilePath}\" -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com \"uptime\""
-                    bat 'ssh -vv -i $PK -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com \"uptime\"' 
+                    bat "ssh -vv -i ${PK} -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com \"uptime\"" 
                 }
 
                 //withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'vj-aws-dev-creds']]) {
