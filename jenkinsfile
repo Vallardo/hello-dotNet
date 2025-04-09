@@ -3,7 +3,7 @@ pipeline {
     environment {
         AWS_DEFAULT_REGION = 'us-west-2'  // Set your AWS region here
         // Explicitly define the known hosts file location
-        SSH_KNOWN_HOSTS = "${env.WORKSPACE}\\known_hosts"
+        SSH_KNOWN_HOSTS = "${env.WORKSPACE}\\.ssh\\known_hosts"
     }
 
     options {
@@ -60,50 +60,11 @@ pipeline {
             }
         }
 
-        /*stage('Launch EC2 Instance') {
-            steps {
-                script {
-                    // Define the AMI ID, Instance Type, Security Group ID, Subnet ID, and Key Pair
-                    //def amiId = 'ami-075686beab831bb7f'  //ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-20250305
-                    def amiId = 'ami-087f352c165340ea1'    //Amazon Linux 2023 AMI 2023.7.20250331.0 x86_64 HVM kernel-6.1 
-                    def instanceType = 't2.micro'        // Replace with your desired instance type
-                    session manager is the recommended way to authenticate, so no keyName is required, a flag saying no-key is require
-                    //def keyName = 'vallardo_ec2'            // Replace with your EC2 Key Pair  //not used in real project
-                    def securityGroupId = 'sg-0abcd1234efgh5678'  // Replace with your Security Group ID
-                    def subnetId = 'subnet-12345abcde67890fg'     // Replace with your Subnet ID
-                    def tagName = 'MyEC2Instance'         // Name tag for the instance
-
-                    // Launch EC2 Instance using AWS CLI command
-                    bat """
-                        aws ec2 run-instances \
-                            --image-id ${amiId} \
-                            --count 1 \
-                            --instance-type ${instanceType} \
-                            --key-name ${keyName} \optional
-                            --security-group-ids ${securityGroupId} \
-                            --subnet-id ${subnetId} \
-                            --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=${tagName}}]' \
-                            --output json
-                    """
-                }
-            }
-        }
-        
-        stage('Describe EC2 Instance') {
-            steps {
-                script {
-                    // Get the instance ID of the launched instance
-                    //def instanceId = sh(script: "aws ec2 describe-instances --query 'Reservations[0].Instances[0].InstanceId' --output text", returnStdout: true).trim()
-                    echo "Launched EC2 instance with ID: ${instanceId}"
-                }
-            }
-        }*/
-        
         stage('Connect to EC2 via SSH'){
             steps{
                 withCredentials([sshUserPrivateKey(credentialsId: 'vj_aws_ec2_ssh', keyFileVariable: 'PK')]) {
                     echo 'Inside sshUserPrivateKey credentials'
-                    bat "if not exist ${SSH_KNOWN_HOSTS}\\.ssh mkdir ${SSH_KNOWN_HOSTS}\\.ssh"
+                    bat "if not exist ${SSH_KNOWN_HOSTS} mkdir ${SSH_KNOWN_HOSTS}"
                     //bat "ssh-keyscan -t rsa,dsa ec2-44-245-155-98.us-west-2.compute.amazonaws.com >> ${SSH_KNOWN_HOSTS}\\.ssh\\known_hosts"
                     //sh 'git -c core.sshCommand="ssh -i $PK" submodule update --init'
                     //bat "ssh -vv -i \"${pemFilePath}\" -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com \"uptime\""
