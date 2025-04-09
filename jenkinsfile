@@ -111,7 +111,7 @@ pipeline {
                                 '''
                     //sh 'git -c core.sshCommand="ssh -i $PK" submodule update --init'
                     //bat "ssh -vv -i \"${pemFilePath}\" -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com \"uptime\""
-                    bat 'ssh -vv -i $PK -o StrictHostKeyChecking=no ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com' 
+                    bat 'ssh -vv -i $PK -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com \"uptime\"' 
                 }
 
                 //withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'vj-aws-dev-creds']]) {
