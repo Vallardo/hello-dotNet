@@ -104,13 +104,8 @@ pipeline {
                 withCredentials([sshUserPrivateKey(credentialsId: 'vj_aws_ec2_ssh', keyFileVariable: 'PK')]) {
                     echo 'Inside sshUserPrivateKey credentials'
                     echo "${PK}"
-                    bat '''
-                                    REM Create the .ssh directory if it does not exist
-                                    if not exist %USERPROFILE%\\.ssh mkdir %USERPROFILE%\\.ssh
-                                    
-                                    REM Add the server's SSH keys to the known_hosts file
-                                    ssh-keyscan -t rsa,dsa ec2-44-245-155-98.us-west-2.compute.amazonaws.com >> %USERPROFILE%\\.ssh\\known_hosts
-                        '''
+                    bat 'if not exist %USERPROFILE%\\.ssh mkdir %USERPROFILE%\\.ssh'
+                    bat 'ssh-keyscan -t rsa,dsa ec2-44-245-155-98.us-west-2.compute.amazonaws.com >> %USERPROFILE%\\.ssh\\known_hosts'
                     //sh 'git -c core.sshCommand="ssh -i $PK" submodule update --init'
                     //bat "ssh -vv -i \"${pemFilePath}\" -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com \"uptime\""
                     bat "ssh -vv -i ${PK} -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com \"uptime\"" 
