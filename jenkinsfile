@@ -116,10 +116,10 @@ pipeline {
                         //bat "powershell Set-ItemProperty -Path \"${pemFilePath}\" -Name \"IsReadOnly\" -Value $true"
                         //bat 'ssh -i "vallardo-pem" -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com "uptime"'
                         //bat "ssh -vv -i \"${pemFilePath}\" -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com \"uptime\""
-
-                        sshagent(credentials: ['vj_aws_ec2_ssh']) {
-                            script {
-                                echo 'ABout to call SSH'
+                        echo 'ABout to call SSH'
+                        //sshagent(credentials: ['vj_aws_ec2_ssh']) {
+                        //    script {
+                        //        echo 'ABout to call SSH'
                                 
                                 
                                 /*bat '''
@@ -132,8 +132,8 @@ pipeline {
                                     REM Run the SSH command to the EC2 instance
                                     ssh -o StrictHostKeyChecking=no ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com "hostname"
                                 '''*/
-                            }
-                        }
+                        //    }
+                        //}
                 //}
                 
                 
