@@ -103,9 +103,8 @@ pipeline {
             steps{
                 withCredentials([sshUserPrivateKey(credentialsId: 'vj_aws_ec2_ssh', keyFileVariable: 'PK')]) {
                     echo 'Inside sshUserPrivateKey credentials'
-                    echo "${PK}"
                     bat "if not exist ${SSH_KNOWN_HOSTS}\\.ssh mkdir ${SSH_KNOWN_HOSTS}\\.ssh"
-                    bat "ssh-keyscan -t rsa,dsa ec2-44-245-155-98.us-west-2.compute.amazonaws.com >> ${SSH_KNOWN_HOSTS}\\.ssh\\known_hosts"
+                    //bat "ssh-keyscan -t rsa,dsa ec2-44-245-155-98.us-west-2.compute.amazonaws.com >> ${SSH_KNOWN_HOSTS}\\.ssh\\known_hosts"
                     //sh 'git -c core.sshCommand="ssh -i $PK" submodule update --init'
                     //bat "ssh -vv -i \"${pemFilePath}\" -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com \"uptime\""
                     bat "ssh -vv -i ${PK} -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com \"uptime\""
