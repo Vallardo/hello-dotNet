@@ -3,7 +3,7 @@ pipeline {
     environment {
         AWS_DEFAULT_REGION = 'us-west-2'  // Set your AWS region here
         // Explicitly define the known hosts file location
-        SSH_KNOWN_HOSTS = "${env.WORKSPACE}/known_hosts"
+        SSH_KNOWN_HOSTS = "${env.WORKSPACE}\known_hosts"
     }
 
     options {
