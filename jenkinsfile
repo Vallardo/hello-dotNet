@@ -69,10 +69,11 @@ pipeline {
                     //sh 'git -c core.sshCommand="ssh -i $PK" submodule update --init'
                     //bat "ssh -vv -i \"${pemFilePath}\" -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com \"uptime\""
                     bat """
+                    set
                     whoami
-                    echo %USERNAME%
+                    echo %USERDOMAIN%\\%USERNAME%
                     icacls ${PK} /inheritance:r
-                    icacls ${PK} /grant:r \"%USERNAME%\":\"(R)\""""
+                    icacls ${PK} /grant:r \"%USERDOMAIN%\\%USERNAME%\":\"(R)\""""
 
                     bat "ssh -vv -o StrictHostKeychecking=no -i ${PK} -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com \"uptime\""
                 }
