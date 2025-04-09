@@ -101,7 +101,7 @@ pipeline {
         
         stage('Connect to EC2 via SSH'){
             steps{
-                withCredentials([sshUserPrivateKey(credentialsId: 'vj-aws-dev-creds', keyFileVariable: 'PK')]) {
+                withCredentials([sshUserPrivateKey(credentialsId: 'vj_aws_ec2_ssh', keyFileVariable: 'PK')]) {
                     echo 'Inside sshUserPrivateKey credentials'
                     echo '$PK'
                     //bat '''
