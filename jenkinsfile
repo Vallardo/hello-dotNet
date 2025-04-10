@@ -87,7 +87,7 @@ pipeline {
                         def pemFilePath = "${env.WORKSPACE}\\vallardo-plain-ec2-pem"
 
                         writeFile file: pemFilePath, text: secretValue
-                        
+                        bat "ssh -vv -i \"${pemFilePath}\" -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com"
 
                         // Debug: Confirm the file is created
                 //        echo "PEM file written to: ${pemFilePath}"
@@ -102,7 +102,7 @@ pipeline {
                         //            REM Add the server's SSH keys to the known_hosts file
                         //            ssh-keyscan -t rsa,dsa ec2-44-245-155-98.us-west-2.compute.amazonaws.com >> %USERPROFILE%\\.ssh\\known_hosts
                         //        '''
-                        //bat "ssh -vv -i \"${pemFilePath}\" -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com \"uptime\""
+                        
                         //sshagent(credentials: ['vj_aws_ec2_ssh']) {
                         //    script {
                         //        echo 'ABout to call SSH'
