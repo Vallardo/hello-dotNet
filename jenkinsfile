@@ -62,31 +62,32 @@ pipeline {
 
         stage('Connect to EC2 via SSH'){
             steps{
-                withCredentials([sshUserPrivateKey(credentialsId: 'vj_aws_ec2_ssh', keyFileVariable: 'PK')]) {
-                    echo 'Inside sshUserPrivateKey credentials'
-                    bat "if not exist ${SSH_KNOWN_HOSTS} mkdir ${SSH_KNOWN_HOSTS}"
+                //withCredentials([sshUserPrivateKey(credentialsId: 'vj_aws_ec2_ssh', keyFileVariable: 'PK')]) {
+                //    bat "if not exist ${SSH_KNOWN_HOSTS} mkdir ${SSH_KNOWN_HOSTS}"
                     //bat "ssh-keyscan -t rsa,dsa ec2-44-245-155-98.us-west-2.compute.amazonaws.com >> ${SSH_KNOWN_HOSTS}\\.ssh\\known_hosts"
                     //sh 'git -c core.sshCommand="ssh -i $PK" submodule update --init'
                     //bat "ssh -vv -i \"${pemFilePath}\" -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com \"uptime\""
-                    bat """
-                    set
-                    whoami
-                    echo %USERDOMAIN%\\%USERNAME%
-                    RUNAS /user:\"%USERDOMAIN%\\%USERNAME%\" icacls.exe ${PK} /inheritance:r
-                    RUNAS /user:\"%USERDOMAIN%\\%USERNAME%\" icacls.exe ${PK} /grant:r \"%USERDOMAIN%\\%USERNAME%\":\"(R)\""""
+                //    bat """
+                //    set
+                //    whoami
+                //    echo %USERDOMAIN%\\%USERNAME%
+                //    icacls ${PK} /inheritance:r
+                //    icacls ${PK} /grant:r \"%USERDOMAIN%\\%USERNAME%\":\"(R)\""""
 
-                    bat "ssh -vv -o StrictHostKeychecking=no -i ${PK} -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com \"uptime\""
-                }
+                //    bat "ssh -vv -o StrictHostKeychecking=no -i ${PK} -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com \"uptime\""
+                //}
 
-                //withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'vj-aws-dev-creds']]) {
-                //    script{
-                //        echo 'Connecting to EC2 via ssh...'
-                //        def secretValue = bat(script: '''aws secretsmanager get-secret-value --secret-id vallardo-plain-ec2-pem --query SecretString --output text''', returnStdout: true).trim()
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'vj-aws-dev-creds']]) {
+                    script{
+                        echo 'Connecting to EC2 via ssh...'
+                        def secretValue = bat(script: '''aws secretsmanager get-secret-value --secret-id vallardo-plain-ec2-pem --query SecretString --output text''', returnStdout: true).trim()
                         // Write the PEM content to a file in the workspace
                         //Note: Jenkins does not allow writting files with .pem extension 
-                //        def pemFilePath = "${env.WORKSPACE}\\vallardo-plain-ec2-pem"
+                        echo secretValue
+                        def pemFilePath = "${env.WORKSPACE}\\vallardo-plain-ec2-pem"
 
-                //        writeFile file: pemFilePath, text: secretValue
+                        writeFile file: pemFilePath, text: secretValue
+                        cat pemFilePath
 
                         // Debug: Confirm the file is created
                 //        echo "PEM file written to: ${pemFilePath}"
@@ -118,8 +119,8 @@ pipeline {
                                     ssh -o StrictHostKeyChecking=no ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com "hostname"
                                 '''*/
                         //    }
-                    //}
-                //}
+                    }
+                }
                 
                 
             }
