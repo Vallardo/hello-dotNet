@@ -87,7 +87,7 @@ pipeline {
                         def pemFilePath = "${env.WORKSPACE}\\vallardo-plain-ec2-pem"
 
                         writeFile file: pemFilePath, text: secretValue
-                        cat pemFilePath
+                        
 
                         // Debug: Confirm the file is created
                 //        echo "PEM file written to: ${pemFilePath}"
