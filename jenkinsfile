@@ -72,8 +72,8 @@ pipeline {
                     set
                     whoami
                     echo %USERDOMAIN%\\%USERNAME%
-                    icacls ${PK} /inheritance:r
-                    icacls ${PK} /grant:r \"%USERDOMAIN%\\%USERNAME%\":\"(R)\""""
+                    RUNAS /user:%USERDOMAIN%\%USERNAME% icacls.exe ${PK} /inheritance:r
+                    RUNAS /user:%USERDOMAIN%\%USERNAME% icacls.exe ${PK} /grant:r \"%USERDOMAIN%\\%USERNAME%\":\"(R)\""""
 
                     bat "ssh -vv -o StrictHostKeychecking=no -i ${PK} -T ec2-user@ec2-44-245-155-98.us-west-2.compute.amazonaws.com \"uptime\""
                 }
